@@ -4,7 +4,7 @@ if (NOT ${SDL2_FOUND})
     FetchContent_Declare(
         SDL2
     GIT_REPOSITORY https://github.com/libsdl-org/SDL.git
-    GIT_TAG release-2.28.1 
+    GIT_TAG release-2.32.10
     )
     message("SDL2 not found. Downloading now...")
     FetchContent_MakeAvailable(SDL2)
