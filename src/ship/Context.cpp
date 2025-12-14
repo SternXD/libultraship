@@ -29,6 +29,10 @@
 #include <Windows.h>
 #include <map>
 #include <string>
+#include <winrt/Windows.Storage.h>
+#include <winrt/Windows.Foundation.h>
+#include <winrt/Windows.Foundation.Collections.h>
+#include <winrt/base.h>
 #endif
 
 namespace Ship {
@@ -521,16 +525,13 @@ std::string Context::GetPathRelativeToAuxiliary(const std::string path) {
 #ifdef _UWP
     static std::map<std::string, bool> driveAccessCache;
     auto CheckDriveAccess = [&](const std::string& driveName) -> bool {
-        // Check cache first
         auto it = driveAccessCache.find(driveName);
         if (it != driveAccessCache.end()) {
             return it->second;
         }
-
         bool accessible = false;
         try {
             std::wstring drivePath = std::wstring(driveName.begin(), driveName.end()) + L"\\*.*";
-
             WIN32_FIND_DATA findData;
             HANDLE searchHandle = FindFirstFileExFromAppW(
                 drivePath.c_str(),
@@ -545,23 +546,19 @@ std::string Context::GetPathRelativeToAuxiliary(const std::string path) {
                 accessible = true;
             }
         } catch (...) {
-            // Drive not accessible
             accessible = false;
         }
-        // Cache the result
         driveAccessCache[driveName] = accessible;
         return accessible;
     };
 
-    // Try D:/ or E:/ as fallback paths
-    const char* drives[] = { "D:", "E:" };
+    const char* drives[] = { "E:", "D:" };
     for (const char* drive : drives) {
         if (CheckDriveAccess(drive)) {
-            std::filesystem::path testPath = std::filesystem::path(std::string(drive) + "/2ship/");
-            return (testPath / path).string();
+            return (std::filesystem::path(std::string(drive) + "/2ship/") / path).string();
         }
     }
-    // Final fallback to D:/2ship/ (most common for internal drives)
+    // Final fallback to D:/2ship/
     return std::string("D:/2ship/") + path;
 #else
     return std::string("E:/2ship/") + path;
