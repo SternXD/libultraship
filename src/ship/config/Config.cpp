@@ -301,6 +301,9 @@ WindowBackend Config::GetWindowBackend() {
     SPDLOG_TRACE(
         "Could not find available WindowBackend matching id from config file ({}). Returning default WindowBackend.",
         backendId);
+#ifdef _UWP
+    return WindowBackend::FAST3D_SDL_OPENGL;
+#endif
 #ifdef ENABLE_DX11
     return WindowBackend::FAST3D_DXGI_DX11;
 #endif
