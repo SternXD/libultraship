@@ -53,7 +53,7 @@
 using QWORD = uint64_t; // For NEXTRAWINPUTBLOCK
 
 #ifdef _UWP
-extern "C" __declspec(dllimport) float uwp_GetRefreshRate();
+extern "C" __declspec(dllimport) float uwp_GetCachedRefreshRate();
 extern "C" __declspec(dllimport) void* uwp_GetWindowReference();
 extern "C" __declspec(dllimport) void uwp_ProcessEvents();
 #endif
@@ -264,7 +264,7 @@ static void GetMonitorHzPeriod(HMONITOR hMonitor, double& Frequency, double& Per
         }
     }
 #else
-    Frequency = uwp_GetRefreshRate();
+    Frequency = uwp_GetCachedRefreshRate();
     Period = HzToPeriod(Frequency);
 #endif
 }
@@ -286,7 +286,7 @@ static void GetMonitorHzPeriod(std::tuple<HMONITOR, RECT, BOOL> Monitor, double&
         }
     }
 #else
-    Frequency = uwp_GetRefreshRate();
+    Frequency = uwp_GetCachedRefreshRate();
     Period = HzToPeriod(Frequency);
 #endif
 }

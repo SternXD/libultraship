@@ -45,7 +45,7 @@ LONG_PTR SDL_WndProc;
 #endif
 
 #ifdef _UWP
-extern "C" __declspec(dllimport) float uwp_GetRefreshRate();
+extern "C" __declspec(dllimport) float uwp_GetCachedRefreshRate();
 #endif
 
 namespace Fast {
@@ -699,7 +699,7 @@ void GfxWindowBackendSDL2::SwapBuffersBegin() {
     // DLW: No need to sync on timer if target matches host refresh
     // -> Might be UWP specific since vsync is forced on inside mesa driver
     // -> Have noticed imgui framerate glitches out when skipping sync but also gets rid of microstutters
-    if (abs(mTargetFps - uwp_GetRefreshRate()) >= 1) {
+    if (abs(mTargetFps - uwp_GetCachedRefreshRate()) >= 1) {
         SyncFramerateWithTime();
     } else {
         previous_time = qpc_to_100ns(SDL_GetPerformanceCounter());

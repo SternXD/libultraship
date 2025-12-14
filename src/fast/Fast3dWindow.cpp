@@ -16,7 +16,7 @@
 #include <fstream>
 
 #ifdef _UWP
-extern "C" __declspec(dllimport) float uwp_GetRefreshRate();
+extern "C" __declspec(dllimport) float uwp_GetCachedRefreshRate();
 extern "C" __declspec(dllimport) void  uwp_GetScreenSize(int* x, int* y);
 #endif
 
@@ -299,7 +299,7 @@ uint32_t Fast3dWindow::GetCurrentRefreshRate() {
     mWindowManagerApi->GetActiveWindowRefreshRate(&refreshRate);
     return refreshRate;
 #else
-    return std::ceil(uwp_GetRefreshRate());
+    return std::min<uint32_t>(std::ceil(uwp_GetCachedRefreshRate()), 60);
 #endif
 }
 
